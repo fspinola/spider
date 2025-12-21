@@ -72,12 +72,12 @@ Include textures and materials:
 <asset>
   <!-- Skybox texture -->
   <texture type="skybox" builtin="gradient"
-           rgb1="0.3 0.5 0.7" rgb2="0 0 0"
+           rgb1="1 1 1" rgb2="0 0 0"
            width="512" height="3072" />
 
   <!-- Ground plane texture -->
   <texture type="2d" name="left_groundplane" builtin="checker"
-           mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+           mark="edge" rgb1="1 1 1" rgb2="1 1 1"
            markrgb="0.8 0.8 0.8" width="300" height="300" />
 
   <!-- Ground material -->
@@ -131,6 +131,8 @@ Change mesh names to avoid conflicts (especially for bimanual setups):
 ### Step 6: Add Collision Geometry
 
 Create simplified collision geometry using primitives:
+
+For each finger, in different parts, the collision index start from 0 and increase in each new body.
 
 ```xml
 <body name="left_index_tip">
@@ -502,7 +504,7 @@ Add white background and tracking camera:
 
   <!-- White groundplane -->
   <texture type="2d" name="groundplane" builtin="checker" mark="edge"
-           rgb1="1 1 1" rgb2="1 1 1" markrgb="1 1 1"
+           rgb1="1 1 1" rgb2="1 1 1" markrgb="0 0 0"
            width="300" height="300"/>
   <material name="groundplane" texture="groundplane" texuniform="true"
             texrepeat="5 5" reflectance="0"/>

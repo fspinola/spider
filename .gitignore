@@ -211,3 +211,7 @@ docs/node_modules/
 docs/.vitepress/dist/
 docs/.vitepress/cache/
 # docs/package-lock.json  # Uncomment to ignore lock file
+
+# private-robots
+spider/assets/robots/xhand_pro/
+spider/assets/robots/sharpa/

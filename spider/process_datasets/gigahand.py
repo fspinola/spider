@@ -6,6 +6,14 @@
 
 """This script process gigahand dataset to our target format.
 
+To use this script, you need to follow the gigahands setup instruction: https://github.com/brown-ivl/GigaHands. You also need to download required hand models from MANO website following the instructions in the README of GigaHands.
+Create a conda environment and install spider without dependency:
+
+```
+conda activate gigahands
+pip install --no-deps -e .
+```
+
 Process:
 1. Load object and hand pose data
 2. Convert original mano point to finger tip and wrist pose
@@ -363,7 +371,7 @@ def extract_object_data(transform):
 
 
 def main(
-    dataset_dir: str = "../../example_datasets",
+    dataset_dir: str = f"{spider.ROOT}/../example_datasets",
     participant: str = "p36",
     scene_name: str = "17_instruments",
     object_name: str = "ukelele_scan",
