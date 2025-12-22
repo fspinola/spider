@@ -211,7 +211,7 @@ We expect everyone to follow the Contributor Covenant Code of Conduct in `CODE_O
 ## Citation
 
 ```bibtex
-@misc{pan2025spiderscalablephysicsinformeddexterous,
+@article{pan2025spiderscalablephysicsinformeddexterous,
       title={SPIDER: Scalable Physics-Informed Dexterous Retargeting},
       author={Chaoyi Pan and Changhao Wang and Haozhi Qi and Zixi Liu and Homanga Bharadhwaj and Akash Sharma and Tingfan Wu and Guanya Shi and Jitendra Malik and Francois Hogan},
       year={2025},

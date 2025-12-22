@@ -31,17 +31,17 @@ import os
 import pickle
 import shutil
 
-import torch
 import imageio
 import mujoco
 import numpy as np
+import torch
 import tyro
 from loop_rate_limiters import RateLimiter
 
 from spider import ROOT
 from spider.io import get_processed_data_dir
-from spider.mujoco_utils import get_viewer
 from spider.math import quat_sub
+from spider.mujoco_utils import get_viewer
 
 
 def main(
@@ -59,8 +59,8 @@ def main(
     end_frame: int = -1,
     contact_detection_mode: str = "one",
 ):
-    """
-    Process GMR data to create a SPIDER dataset.
+    """Process GMR data to create a SPIDER dataset.
+
     Args:
         dataset_dir: The directory containing the GMR data.
         dataset_name: The name of the dataset.
@@ -133,12 +133,16 @@ def main(
         site_name = mujoco.mj_id2name(mj_model, mujoco.mjtObj.mjOBJ_SITE, i)
         if site_name and "contact" in site_name:
             contact_site_ids.append(i)
-    assert len(contact_site_ids) > 0 and contact_detection_mode != "zero", "No contact site found while you enable contact detection"
+    assert len(contact_site_ids) > 0 and contact_detection_mode != "zero", (
+        "No contact site found while you enable contact detection"
+    )
 
     # create task info file
     task_info_file = f"{scene_dir}/task_info.json"
     with open(task_info_file, "w") as f:
-        json.dump({"ref_dt": 1.0 / fps, "contact_site_ids": contact_site_ids}, f, indent=2)
+        json.dump(
+            {"ref_dt": 1.0 / fps, "contact_site_ids": contact_site_ids}, f, indent=2
+        )
     print(f"Saved task info to {task_info_file}")
 
     # log info

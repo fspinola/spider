@@ -198,12 +198,17 @@ def render_image(
     mj_data: mujoco.MjData,
     mj_data_ref: mujoco.MjData,
 ):
+    options = mujoco.MjvOption()
+    mujoco.mjv_defaultOption(options)
+    options.flags[mujoco.mjtVisFlag.mjVIS_CONTACTPOINT] = True
+    options.flags[mujoco.mjtVisFlag.mjVIS_CONTACTFORCE] = True
+
     # render sim
     mujoco.mj_forward(mj_model, mj_data)
     try:
-        renderer.update_scene(mj_data, "front")
+        renderer.update_scene(mj_data, "front", options)
     except Exception:
-        renderer.update_scene(mj_data, 0)
+        renderer.update_scene(mj_data, 0, options)
     sim_image = renderer.render()
     # add text named "sim"
     cv2.putText(

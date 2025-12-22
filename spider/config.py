@@ -45,7 +45,7 @@ class Config:
     ctrl_dt: float = 0.4  # control timestep
     ref_dt: float = 0.02  # reference data timestep
     render_dt: float = 0.02  # rendering timestep
-    horizon: float = 1.2  # planning horizon
+    horizon: float = 1.6  # planning horizon
     knot_dt: float = 0.4  # knot point spacing
     max_sim_steps: int = -1  # maximum simulation steps (-1 for unlimited)
     # Simulation constraints
@@ -66,13 +66,13 @@ class Config:
 
     # === OPTIMIZER CONFIGURATION ===
     # Sampling parameters
-    num_samples: int = 1024
-    temperature: float = 0.1
+    num_samples: int = 2048
+    temperature: float = 0.3
     max_num_iterations: int = 16
     improvement_threshold: float = 0.01
     improvement_check_steps: int = 1
     # Termination parameters
-    terminate_resample: bool = True
+    terminate_resample: bool = False
     object_pos_threshold: float = 0.1
     object_rot_threshold: float = 0.3
     base_pos_threshold: float = 0.5
@@ -86,8 +86,8 @@ class Config:
     exploit_ratio: float = 0.01
     exploit_noise_scale: float = 0.01
     # Noise scaling by component
-    joint_noise_scale: float = 0.3
-    pos_noise_scale: float = 0.01
+    joint_noise_scale: float = 0.15
+    pos_noise_scale: float = 0.03
     rot_noise_scale: float = 0.03
     # Reward scaling
     base_pos_rew_scale: float = 1.0

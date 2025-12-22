@@ -25,6 +25,7 @@ import json
 import os
 import pickle
 from contextlib import contextmanager
+from pathlib import Path
 
 import loguru
 import mujoco
@@ -36,6 +37,7 @@ import tyro
 from loop_rate_limiters import RateLimiter
 from scipy.spatial.transform import Rotation as R
 
+import spider
 from spider.io import get_mesh_dir, get_processed_data_dir
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
@@ -50,7 +52,7 @@ class CPUUnpickler(pickle.Unpickler):
 
 
 def main(
-    dataset_dir: str = "../../example_datasets",
+    dataset_dir: str = f"{spider.ROOT}/../example_datasets",
     embodiment_type: str = "bimanual",
     task: str = "pick_spoon_bowl",
     show_viewer: bool = True,
@@ -136,7 +138,8 @@ def main(
         if not os.path.exists(mesh_dir):
             os.makedirs(mesh_dir)
         ms.save_current_mesh(f"{mesh_dir}/visual.obj")
-        task_info["right_object_mesh_dir"] = mesh_dir
+        mesh_dir_relative = Path(mesh_dir).relative_to(Path(dataset_dir))
+        task_info["right_object_mesh_dir"] = str(mesh_dir_relative)
 
     # read left object data
     if embodiment_type in ["left", "bimanual"]:
@@ -164,7 +167,8 @@ def main(
             if not os.path.exists(mesh_dir):
                 os.makedirs(mesh_dir)
             ms.save_current_mesh(f"{mesh_dir}/visual.obj")
-            task_info["left_object_mesh_dir"] = mesh_dir
+            mesh_dir_relative = Path(mesh_dir).relative_to(Path(dataset_dir))
+            task_info["left_object_mesh_dir"] = str(mesh_dir_relative)
 
     # persist task info for downstream tools (e.g., decomposition)
     task_info_path = f"{output_dir}/../task_info.json"
@@ -292,7 +296,7 @@ def main(
     if embodiment_type in ["right", "bimanual"]:
         mj_spec.add_mesh(
             name="right_object",
-            file=f"{task_info['right_object_mesh_dir']}/visual.obj",
+            file=f"{dataset_dir}/{task_info['right_object_mesh_dir']}/visual.obj",
         )
         object_right_handle.add_geom(
             name="right_object",
@@ -323,7 +327,7 @@ def main(
         # add left object to body "left_object"
         mj_spec.add_mesh(
             name="left_object",
-            file=f"{task_info['left_object_mesh_dir']}/visual.obj",
+            file=f"{dataset_dir}/{task_info['left_object_mesh_dir']}/visual.obj",
         )
         object_left_handle.add_geom(
             name="left_object",

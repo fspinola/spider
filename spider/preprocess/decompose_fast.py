@@ -102,7 +102,7 @@ def main(
     task: str = "pick_spoon_bowl",
     data_id: int = 0,
 ) -> None:
-    dataset_path = Path(dataset_dir).expanduser().resolve()
+    dataset_path = Path(dataset_dir)
 
     if embodiment_type == "right":
         hands = ["right"]

@@ -92,6 +92,10 @@ def main(
 
         model.vis.global_.offwidth = 720
         model.vis.global_.offheight = 480
+        model.vis.scale.contactwidth = 0.1
+        model.vis.scale.contactheight = 0.03
+        model.vis.scale.forcewidth = 0.05
+        model.vis.map.force = 0.3
         renderer = mujoco.Renderer(model, height=480, width=720)
         images = []
 

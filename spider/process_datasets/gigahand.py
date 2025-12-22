@@ -634,7 +634,8 @@ def main(
     loguru.logger.info(
         f"Saved centered mesh (offset: {mesh_centroid_offset}) from {right_obj_mesh_path} to {mesh_dir}/visual.obj"
     )
-    task_info["right_object_mesh_dir"] = mesh_dir
+    relative_path = Path(mesh_dir).relative_to(Path(dataset_dir))
+    task_info["right_object_mesh_dir"] = str(relative_path)
     # single object
     task_info["left_object_mesh_dir"] = None
     # persist
@@ -687,7 +688,7 @@ def main(
     ):
         mj_spec.add_mesh(
             name="right_object",
-            file=f"{task_info['right_object_mesh_dir']}/visual.obj",
+            file=f"{dataset_dir}/{task_info['right_object_mesh_dir']}/visual.obj",
         )
         object_right_handle.add_geom(
             name="right_object",
@@ -723,7 +724,7 @@ def main(
         # add left object to body "left_object"
         mj_spec.add_mesh(
             name="left_object",
-            file=f"{task_info['left_object_mesh_dir']}/visual.obj",
+            file=f"{dataset_dir}/{task_info['left_object_mesh_dir']}/visual.obj",
         )
         object_left_handle.add_geom(
             name="left_object",

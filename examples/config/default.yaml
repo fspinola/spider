@@ -50,8 +50,8 @@ final_noise_scale: 0.1
 exploit_ratio: 0.01
 exploit_noise_scale: 0.01
 # Noise scaling by component
-joint_noise_scale: 0.3
-pos_noise_scale: 0.01
+joint_noise_scale: 0.15
+pos_noise_scale: 0.03
 rot_noise_scale: 0.03
 # Reward scaling
 base_pos_rew_scale: 1.0
