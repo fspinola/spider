@@ -291,36 +291,6 @@ def main(
                     axis=1,
                 ).mean()
 
-                if task_name == "lift_board":
-                    from matplotlib import pyplot as plt
-
-                    # plot x, y, z in 3 subplots
-                    # plot quat in 3 subplots
-                    fig, axs = plt.subplots(7, 1)
-                    fig.suptitle(f"Task: {task_name}, Data ID: {data_id}")
-                    axs[0].set_title("x")
-                    axs[1].set_title("y")
-                    axs[2].set_title("z")
-                    axs[3].set_title("quat x")
-                    axs[4].set_title("quat y")
-                    axs[5].set_title("quat z")
-                    axs[6].set_title("quat w")
-                    axs[0].plot(pos_object_right_traj[:, 0])
-                    axs[0].plot(pos_object_right_kinematic[:, 0], "--")
-                    axs[1].plot(pos_object_right_traj[:, 1])
-                    axs[1].plot(pos_object_right_kinematic[:, 1], "--")
-                    axs[2].plot(pos_object_right_traj[:, 2])
-                    axs[2].plot(pos_object_right_kinematic[:, 2], "--")
-                    axs[3].plot(quat_wxyz_object_right_traj[:, 0])
-                    axs[3].plot(quat_wxyz_object_right_kinematic[:, 0], "--")
-                    axs[4].plot(quat_wxyz_object_right_traj[:, 1])
-                    axs[4].plot(quat_wxyz_object_right_kinematic[:, 1], "--")
-                    axs[5].plot(quat_wxyz_object_right_traj[:, 2])
-                    axs[5].plot(quat_wxyz_object_right_kinematic[:, 2], "--")
-                    axs[6].plot(quat_wxyz_object_right_traj[:, 3])
-                    axs[6].plot(quat_wxyz_object_right_kinematic[:, 3], "--")
-                    plt.show()
-
                 # compute average pos and quat error (handle the case where the object is a place holder)
                 # if pos_object_right_kinematic close to 0, then only use left
                 # if pos_object_left_kinematic close to 0, then only use right
