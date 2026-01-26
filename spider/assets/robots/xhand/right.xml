@@ -101,15 +101,16 @@
                       <geom name="right_thumb_rota2_visual" type="mesh" contype="0" conaffinity="0"
                         group="1" density="0" rgba="0.792157 0.819608 0.933333 1"
                         mesh="right_hand_thumb_rota_link2" />
-                      <geom name="collision_hand_right_thumb_0" type="capsule" size="0.008"
-                        fromto="0 0 0 0.045 0 0"
+                      <geom name="collision_hand_right_thumb_0" type="capsule" size="0.015"
+                        fromto="0 0 0 0.04 0 0"
                         rgba="0 1 0 1"
                         group="3" />
+
                       <geom size="0.001" pos="0.0504025 0 0" contype="0" conaffinity="0" group="1"
                         density="0" rgba="0.698039 0.698039 0.698039 1" />
-                      <site name="right_thumb_tip" pos="0.0504025 0 0" />
-                      <site name="track_hand_right_thumb_tip" pos="0.0504025 0 0" />
-                      <site name="trace_hand_right_thumb_tip" pos="0.0504025 0 0" />
+                      <site name="right_thumb_tip" pos="0.045 0 -0.015" />
+                      <site name="track_hand_right_thumb_tip" pos="0.045 0 -0.015" />
+                      <site name="trace_hand_right_thumb_tip" pos="0.045 0 -0.015" />
                     </body>
                   </body>
                 </body>
@@ -145,9 +146,9 @@
                         fromto="0 0 0 0 0 -0.03" rgba="0 1 0 1" group="3" />
                       <geom size="0.001" pos="0 0 -0.0425" contype="0" conaffinity="0" group="1"
                         density="0" rgba="0.698039 0.698039 0.698039 1" />
-                      <site name="right_index_tip" pos="0 0 -0.0425" />
-                      <site name="track_hand_right_index_tip" pos="0 0 -0.0425" />
-                      <site name="trace_hand_right_index_tip" pos="0 0 -0.0425" />
+                      <site name="right_index_tip" pos="0 0.005 -0.03" />
+                      <site name="track_hand_right_index_tip" pos="0 0.005 -0.03" />
+                      <site name="trace_hand_right_index_tip" pos="0 0.005 -0.03" />
                     </body>
                   </body>
                 </body>
@@ -174,9 +175,9 @@
                       fromto="0 0 0 0 0 -0.03" rgba="0 1 0 1" group="3" />
                     <geom size="0.001" pos="0 0 -0.042107" contype="0" conaffinity="0" group="1"
                       density="0" rgba="0.698039 0.698039 0.698039 1" />
-                    <site name="right_middle_tip" pos="0 0 -0.042107" />
-                    <site name="track_hand_right_middle_tip" pos="0 0 -0.042107" />
-                    <site name="trace_hand_right_middle_tip" pos="0 0 -0.042107" />
+                    <site name="right_middle_tip" pos="0 0.005 -0.03" />
+                    <site name="track_hand_right_middle_tip" pos="0 0.005 -0.03" />
+                    <site name="trace_hand_right_middle_tip" pos="0 0.005 -0.03" />
                   </body>
                 </body>
                 <body name="right_hand_ring_link1" pos="-0.016 0.0065 -0.1052">
@@ -202,9 +203,9 @@
                       fromto="0 0 0 0 0 -0.03" rgba="0 1 0 1" group="3" />
                     <geom size="0.001" pos="0 0 -0.0425" contype="0" conaffinity="0" group="1"
                       density="0" rgba="0.698039 0.698039 0.698039 1" />
-                    <site name="right_ring_tip" pos="0 0 -0.0425" />
-                    <site name="track_hand_right_ring_tip" pos="0 0 -0.0425" />
-                    <site name="trace_hand_right_ring_tip" pos="0 0 -0.0425" />
+                    <site name="right_ring_tip" pos="0 0.005 -0.03" />
+                    <site name="track_hand_right_ring_tip" pos="0 0.005 -0.03" />
+                    <site name="trace_hand_right_ring_tip" pos="0 0.005 -0.03" />
                   </body>
                 </body>
                 <body name="right_hand_pinky_link1" pos="-0.036 0.0065 -0.1022">
@@ -230,9 +231,9 @@
                       fromto="0 0 0 0 0 -0.03" rgba="0 1 0 1" group="3" />
                     <geom size="0.001" pos="0 0 -0.0425" contype="0" conaffinity="0" group="1"
                       density="0" rgba="0.698039 0.698039 0.698039 1" />
-                    <site name="right_pinky_tip" pos="0 0 -0.0425" />
-                    <site name="track_hand_right_pinky_tip" pos="0 0 -0.0425" />
-                    <site name="trace_hand_right_pinky_tip" pos="0 0 -0.0425" />
+                    <site name="right_pinky_tip" pos="0 0.005 -0.03" />
+                    <site name="track_hand_right_pinky_tip" pos="0 0.005 -0.03" />
+                    <site name="trace_hand_right_pinky_tip" pos="0 0.005 -0.03" />
                   </body>
                 </body>
               </body>

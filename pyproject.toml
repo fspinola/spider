@@ -21,6 +21,7 @@ dependencies = [
   "opencv-python",
   "newton[examples] @ git+https://github.com/newton-physics/newton.git",
   "rerun-sdk==0.26.2",
+  "viser",
   "ipdb",
   "pymeshlab",
   "open3d",

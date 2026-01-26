@@ -101,7 +101,7 @@ class Config:
 
     # === VISUALIZATION CONFIGURATION ===
     show_viewer: bool = True
-    viewer: str = "mujoco"  # "mujoco" | "rerun" | "isaac"
+    viewer: str = "mujoco"  # "mujoco" | "rerun" | "viser" | "isaac"
     rerun_spawn: bool = False
     save_video: bool = True
     save_info: bool = True

@@ -10,8 +10,42 @@ SPIDER supports the following viewer configurations:
 |--------|-------------|----------|
 | `mujoco` | Native MuJoCo viewer | Fast local visualization |
 | `rerun` | Rerun.io viewer | Remote development, rich logging |
+| `viser` | Viser web viewer | Lightweight remote visualization |
 
-To enable both, try `mujoco-rerun` viewer.
+To enable both, try `mujoco-rerun` or `mujoco-viser` viewer.
+
+## Viser Viewer
+
+[Viser](https://github.com/nerfstudio-project/viser) provides a lightweight web-based viewer for 3D scenes.
+
+### Local Usage
+
+```bash
+uv run examples/run_mjwp.py viewer=viser
+```
+
+This will:
+1. Start a Viser server
+2. Log simulation data in real-time
+3. Print a URL to open in your browser
+
+::: warning
+If you run headless (no X display), you may need to set a display before launching:
+
+```bash
+export DISPLAY=:1
+# or
+export MUJOCO_GL=egl
+```
+:::
+
+::: info
+If you see an import error, install the dependency:
+
+```bash
+pip install viser
+```
+:::
 
 ## Rerun Viewer
 

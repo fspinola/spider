@@ -23,24 +23,24 @@ import numpy as np
 import rerun as rr
 
 from spider.config import Config
-from spider.viewers.rerun_viewer import (
-    build_and_log_scene,
-    build_and_log_scene_from_spec,
-    init_rerun,
-    log_frame,
-    # log_reward_samples_by_iter,
-    log_scene_from_npz,
-    # log_stage_improvements,
-    log_traces_from_info,
-    # RerunRealtimeUpdater,
-)
+from spider.viewers import rerun_viewer as rerun_viewer
+from spider.viewers import viser_viewer as viser_viewer
 
 
 def setup_viewer(config: Config, mj_model: mujoco.MjModel, mj_data: mujoco.MjData):
     """Setup the viewer for the retargeting."""
-    if "rerun" in config.viewer:
+    viewer_str = config.viewer.lower()
+    use_rerun = "rerun" in viewer_str
+    use_viser = "viser" in viewer_str
+    if use_rerun and use_viser:
+        loguru.logger.warning(
+            "Both rerun and viser requested; defaulting to rerun."
+        )
+        use_viser = False
+
+    if use_rerun:
         # setup rerun viewer
-        init_rerun(app_name="spider", spawn=config.rerun_spawn)
+        rerun_viewer.init_rerun(app_name="spider", spawn=config.rerun_spawn)
         if config.save_rerun:
             if not os.path.exists("tmp"):
                 os.makedirs("tmp")
@@ -74,13 +74,15 @@ def setup_viewer(config: Config, mj_model: mujoco.MjModel, mj_data: mujoco.MjDat
             # check if python <= 3.8, if so, use log_scene_from_npz
             elif sys.version_info.major <= 3 and sys.version_info.minor <= 8:
                 npz_path = Path(config.model_path).with_suffix(".npz")
-                config.viewer_body_entity_and_ids = log_scene_from_npz(npz_path)
+                config.viewer_body_entity_and_ids = rerun_viewer.log_scene_from_npz(
+                    npz_path
+                )
                 loguru.logger.warning(
                     "viewer is set to rerun, but python <= 3.8 is detected, load from npz file instead"
                 )
             else:
-                _, _, config.viewer_body_entity_and_ids = build_and_log_scene(
-                    Path(config.model_path)
+                _, _, config.viewer_body_entity_and_ids = (
+                    rerun_viewer.build_and_log_scene(Path(config.model_path))
                 )
                 loguru.logger.info(
                     "viewer is set to rerun, build and log scene from xml file"
@@ -89,8 +91,29 @@ def setup_viewer(config: Config, mj_model: mujoco.MjModel, mj_data: mujoco.MjDat
             loguru.logger.warning(
                 "Rerun enabled but 3D scene not available (no model_path). Trajectory logging only."
             )
+
+    if use_viser:
+        viser_viewer.init_viser(app_name="spider")
+        if config.save_rerun:
+            loguru.logger.warning("save_rerun is set, but Viser does not save .rrd.")
+        if mj_model is not None and config.model_path is not None:
+            if config.model_path == "hdmi_scene_from_spec":
+                loguru.logger.info(
+                    "Viser scene already built from HDMI spec, skipping XML loading"
+                )
+            else:
+                _, _, config.viewer_body_entity_and_ids = (
+                    viser_viewer.build_and_log_scene(Path(config.model_path))
+                )
+                loguru.logger.info(
+                    "viewer is set to viser, build and log scene from xml file"
+                )
+        else:
+            loguru.logger.warning(
+                "Viser enabled but 3D scene not available (no model_path). Trajectory logging only."
+            )
     # create mujoco viewer
-    if "mujoco" in config.viewer:
+    if "mujoco" in viewer_str:
         run_viewer = lambda: mujoco.viewer.launch_passive(mj_model, mj_data)
         loguru.logger.info("viewer is set to mujoco, launch passive viewer")
     else:
@@ -117,8 +140,12 @@ def update_viewer(
     mj_data_ref: mujoco.MjData,
     info: dict,
 ):
+    viewer_str = config.viewer.lower()
+    use_rerun = "rerun" in viewer_str
+    use_viser = "viser" in viewer_str and not use_rerun
+
     # update mujoco scene if a viewer is provided
-    if "mujoco" in config.viewer:
+    if "mujoco" in viewer_str:
         mujoco.mj_kinematics(mj_model, mj_data)
         vopt = mujoco.MjvOption()
         vopt.flags[mujoco.mjtVisFlag.mjVIS_TRANSPARENT] = True
@@ -138,10 +165,10 @@ def update_viewer(
             viewer.sync()
 
     # update rerun scene
-    if "rerun" in config.viewer:
+    if use_rerun:
         # Per-body transforms
         if mj_data is not None:
-            log_frame(
+            rerun_viewer.log_frame(
                 mj_data,
                 sim_time=mj_data.time,
                 viewer_body_entity_and_ids=config.viewer_body_entity_and_ids,
@@ -149,7 +176,9 @@ def update_viewer(
 
         # Traces (any keys starting with 'trace_')
         if "trace_sample" in info:
-            log_traces_from_info(info["trace_sample"], sim_time=mj_data.time)
+            rerun_viewer.log_traces_from_info(
+                info["trace_sample"], sim_time=mj_data.time
+            )
 
         # Log scalar metrics (improvement, rew_max, rew_min, rew_median) as continuous time series
         if config.save_metrics:
@@ -180,6 +209,41 @@ def update_viewer(
                             f"metrics/{k}/dim_{dim_idx}",
                             rr.Scalars([float(v[-1, dim_idx])]),
                         )
+
+    # update viser scene
+    if use_viser:
+        if mj_data is not None:
+            viser_viewer.log_frame(
+                mj_data,
+                sim_time=mj_data.time,
+                viewer_body_entity_and_ids=config.viewer_body_entity_and_ids,
+            )
+        if "trace_sample" in info:
+            viser_viewer.log_traces_from_info(
+                info["trace_sample"], sim_time=mj_data.time
+            )
+
+
+def log_frame(
+    data: mujoco.MjData,
+    sim_time: float,
+    viewer_body_entity_and_ids: list,
+) -> None:
+    if not viewer_body_entity_and_ids:
+        return
+    first = viewer_body_entity_and_ids[0][0]
+    if isinstance(first, str):
+        rerun_viewer.log_frame(
+            data,
+            sim_time=sim_time,
+            viewer_body_entity_and_ids=viewer_body_entity_and_ids,
+        )
+    else:
+        viser_viewer.log_frame(
+            data,
+            sim_time=sim_time,
+            viewer_body_entity_and_ids=viewer_body_entity_and_ids,
+        )
 
 
 def setup_renderer(config: Config, mj_model: mujoco.MjModel):

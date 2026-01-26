@@ -45,12 +45,12 @@ from spider.simulators.hdmi import (
     sync_env,
 )
 from spider.viewers import (
+    log_frame,
     render_image,
     setup_renderer,
     setup_viewer,
     update_viewer,
 )
-from spider.viewers.rerun_viewer import log_frame
 
 
 def main(config: Config):
@@ -221,7 +221,7 @@ def main(config: Config):
                         config, renderer, mj_model, mj_data, mj_data_ref
                     )
                     images.append(image)
-                if "rerun" in config.viewer:
+                if "rerun" in config.viewer or "viser" in config.viewer:
                     # manually log the state
                     log_frame(
                         mj_data,

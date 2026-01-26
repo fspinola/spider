@@ -1,0 +1,11 @@
+# @package _global_
+task: pick_spoon_bowl
+robot_type: xhand
+embodiment_type: bimanual
+data_id: 0
+temperature: 1.0
+horizon: 2.0
+base_pos_rew_scale: 0.1
+base_rot_rew_scale: 0.03
+rot_rew_scale: 0.1
+joint_noise_scale: 0.03

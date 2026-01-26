@@ -115,11 +115,19 @@ uv run examples/run_mjwp.py \
 Set environment variables:
 
 ```bash
+# humanoid only
 export TASK=dance
 export HAND_TYPE=humanoid
 export DATA_ID=0
 export ROBOT_TYPE=unitree_g1
 export DATASET_NAME=lafan
+
+# humanoid + object
+export TASK=move_largebox
+export HAND_TYPE=humanoid_object
+export DATA_ID=0
+export ROBOT_TYPE=unitree_g1
+export DATASET_NAME=omomo
 ```
 
 ### Run IK
@@ -141,13 +149,27 @@ uv run spider/process_datasets/locomujoco.py \
   --data-id=${DATA_ID} \
   --robot-type=${ROBOT_TYPE} \
   --embodiment-type=${HAND_TYPE}
+
+# for humanoid + object, we don't have a pipeline yet
+# you can directly download data from omniretarget
+# https://huggingface.co/datasets/omniretarget/OmniRetarget_Dataset
 ```
 
 ### Run Physics-Based Retargeting
 
 ```bash
+# for humanoid only
 uv run examples/run_mjwp.py \
   +override=humanoid \
+  dataset_name=${DATASET_NAME} \
+  task=${TASK} \
+  data_id=${DATA_ID} \
+  robot_type=${ROBOT_TYPE} \
+  embodiment_type=${HAND_TYPE}
+
+# for humanoid + object, we don't have a pipeline yet
+uv run examples/run_mjwp.py \
+  +override=humanoid_object \
   dataset_name=${DATASET_NAME} \
   task=${TASK} \
   data_id=${DATA_ID} \
