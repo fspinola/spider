@@ -237,7 +237,6 @@ def main(
 
                 # Downsample sim trajectory to match reference dt
                 downsample_factor = _get_downsample_factor(ref_dt, sim_dt)
-                downsample_factor = 1
                 if downsample_factor > 1:
                     qpos_traj = qpos_traj[::downsample_factor]
 
