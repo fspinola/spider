@@ -97,12 +97,21 @@ If you already have the example datasets cloned, you can skip the preprocessing 
 Run SPIDER on a processed trial:
 
 ```bash
+# for gigahand dataset
 export TASK=p36-tea
 export HAND_TYPE=bimanual
 export DATA_ID=0
 export ROBOT_TYPE=xhand
 export DATASET_NAME=gigahand
 
+# for oakink dataset
+export TASK=lift_board
+export HAND_TYPE=bimanual
+export DATA_ID=0
+export ROBOT_TYPE=xhand
+export DATASET_NAME=oakink
+
+# run retargeting
 uv run examples/run_mjwp.py \
   +override=${DATASET_NAME} \
   task=${TASK} \

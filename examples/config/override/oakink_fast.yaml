@@ -1,5 +1,5 @@
 # @package _global_
-task: pick_spoon_bowl
+task: lift_board
 robot_type: xhand
 embodiment_type: bimanual
 data_id: 0
