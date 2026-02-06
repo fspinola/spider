@@ -184,6 +184,7 @@ def main(
     average_frame_size: int = 3,
     aggregate_contact: bool = True,
     z_offset: float = 0.0,
+    act_scene: bool = False,
 ):
     # resolved processed directories
     dataset_dir = os.path.abspath(dataset_dir)
@@ -205,7 +206,10 @@ def main(
     )
     os.makedirs(processed_dir_robot, exist_ok=True)
     # load model from processed scene
-    model_path = f"{processed_dir_robot}/../scene.xml"
+    if act_scene:
+        model_path = f"{processed_dir_robot}/../scene_act.xml"
+    else:
+        model_path = f"{processed_dir_robot}/../scene.xml"
     # NOTE: sites in robot should follow the order of the xml file
     sites_in_robot = get_robot_sites(robot_type, embodiment_type)
 
@@ -515,10 +519,15 @@ def main(
                             mj_data_ik.mocap_quat[mocap_idx] = qpos_ref[
                                 cnt, qpos_idx, 3:
                             ]
-                    nq_obj = 14 if embodiment_type == "bimanual" else 7
+                    if act_scene:
+                        nq_obj = 0
+                    else:
+                        nq_obj = 14 if embodiment_type == "bimanual" else 7
                     qpos_diff_sum = 0.0
                     for i in range(30):
-                        mj_data_ik.ctrl[:] = mj_data_ik.qpos[:-nq_obj].copy()
+                        mj_data_ik.ctrl[:] = mj_data_ik.qpos[
+                            : mj_model_ik.nq - nq_obj
+                        ].copy()
                         mujoco.mj_step(mj_model_ik, mj_data_ik)
                     # compute mocap diff
                     for mocap_id, qpos_id in zip(
@@ -533,7 +542,7 @@ def main(
                         qpos_diff_sum += mocap_diff + qpos_diff
                     mj_data.qpos[:] = mj_data_ik.qpos.copy()
                     mj_data.qvel[:] = mj_data_ik.qvel.copy() * 0.0
-                    mj_data.ctrl[:] = mj_data_ik.qpos[:-nq_obj].copy()
+                    mj_data.ctrl[:] = mj_data_ik.qpos[: mj_model_ik.nq - nq_obj].copy()
                     mujoco.mj_forward(mj_model, mj_data)
                     for i in range(30):
                         mujoco.mj_step(mj_model, mj_data)
@@ -544,7 +553,7 @@ def main(
                 loguru.logger.info(f"best_qpos_diff_sum: {best_qpos_diff_sum}")
                 mj_data_ik.qpos[:] = best_qpos_init
                 mj_data_ik.qvel[:] = 0.0
-                mj_data_ik.ctrl[:] = mj_data_ik.qpos[:-nq_obj].copy()
+                mj_data_ik.ctrl[:] = mj_data_ik.qpos[: mj_model_ik.nq - nq_obj].copy()
                 mujoco.mj_step(mj_model_ik, mj_data_ik)
                 qpos_list = []
                 contact_pos_list = []
@@ -566,8 +575,7 @@ def main(
             # set site position and set it to ref mocap position (use original mj_model and mj_data)
             mj_data.qpos[:] = mj_data_ik.qpos.copy()
             mj_data.qvel[:] = 0.0
-            nq_obj = 14 if embodiment_type == "bimanual" else 7
-            mj_data.ctrl[:] = mj_data_ik.qpos[:-nq_obj].copy()
+            mj_data.ctrl[:] = mj_data_ik.qpos[: mj_model_ik.nq - nq_obj].copy()
 
             # override joint position according to contact state
             if open_hand:
@@ -702,12 +710,12 @@ def main(
         os.makedirs(file_dir, exist_ok=True)
         if save_video:
             imageio.mimsave(
-                f"{file_dir}/visualization_ik.mp4",
+                f"{file_dir}/visualization_ik{'_act' if act_scene else ''}.mp4",
                 images,
                 fps=int(1 / ref_dt),
             )
             loguru.logger.info(
-                f"Saved visualization video to {file_dir}/visualization_ik.mp4"
+                f"Saved visualization video to {file_dir}/visualization_ik{'_act' if act_scene else ''}.mp4"
             )
 
         qpos_list = np.array(qpos_list)
@@ -758,14 +766,14 @@ def main(
         mj_model.opt.timestep = ref_dt
         mj_data.qpos[:] = qpos_list[0]
         mj_data.qvel[:] = qvel_list[0]
-        mj_data.ctrl[:] = qpos_list[0][:-nq_obj]
+        mj_data.ctrl[:] = qpos_list[0][: mj_model.nq - nq_obj]
         mujoco.mj_step(mj_model, mj_data)
         H = qpos_list.shape[0]
         qpos_rollout = np.zeros((H, mj_model.nq))
         qvel_rollout = np.zeros((H, mj_model.nv))
         qpos_rollout[0] = qpos_list[0]
         for i in range(1, H):
-            mj_data.ctrl[:] = qpos_list[i][:-nq_obj]
+            mj_data.ctrl[:] = qpos_list[i][: mj_model.nq - nq_obj]
             noise = np.random.randn(mj_model.nu) * 0.2
             noise[:6] *= 0.0
             noise[22:28] *= 0.0
@@ -773,7 +781,10 @@ def main(
             mujoco.mj_step(mj_model, mj_data)
             qpos_rollout[i] = mj_data.qpos.copy()
 
-        out_npz = f"{file_dir}/trajectory_kinematic.npz"
+        if act_scene:
+            out_npz = f"{file_dir}/trajectory_kinematic_act.npz"
+        else:
+            out_npz = f"{file_dir}/trajectory_kinematic.npz"
         np.savez(
             out_npz,
             qpos=qpos_list,
@@ -783,7 +794,10 @@ def main(
             contact_pos=contact_pos_list,
             frequency=1 / ref_dt,
         )
-        out_npz = f"{file_dir}/trajectory_ikrollout.npz"
+        if act_scene:
+            out_npz = f"{file_dir}/trajectory_ikrollout_act.npz"
+        else:
+            out_npz = f"{file_dir}/trajectory_ikrollout.npz"
         np.savez(
             out_npz,
             qpos=qpos_rollout,
