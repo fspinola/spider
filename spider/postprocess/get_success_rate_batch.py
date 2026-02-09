@@ -82,7 +82,7 @@ def main(
                 dataset_dir=dataset_dir,
                 dataset_name=dataset_name,
                 robot_type=robot_type,
-                hand_type=hand_type,
+                embodiment_type=hand_type,
                 data_type=data_type,
                 pos_err_threshold=pos_err_threshold,
                 quat_err_threshold=quat_err_threshold,

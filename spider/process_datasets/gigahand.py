@@ -454,7 +454,7 @@ def main(
     print("Loading MANO models...")
     # TODO: integrate to our pipeline
     body_model_right, body_model_left = load_body_model(
-        model_path=f"{spider.ROOT}/../../GigaHands/body_models"
+        model_path=f"/home/fspinola/body_models"
     )
 
     # Initialize output arrays
@@ -782,7 +782,7 @@ def main(
             if cnt == (N - 1):
                 # save to standardized output dir
                 np.savez(
-                    f"{output_dir}/trajectory_kinematic.npz",
+                    f"{output_dir}/trajectory_keypoints.npz",
                     qpos_wrist_right=qpos_wrist_right,
                     qpos_finger_right=qpos_finger_right,
                     qpos_obj_right=qpos_obj_right,
@@ -792,7 +792,7 @@ def main(
                     contact=np.zeros((N, 10)),
                 )
                 loguru.logger.info(
-                    f"Saved data to {output_dir}/trajectory_kinematic.npz"
+                    f"Saved data to {output_dir}/trajectory_keypoints.npz"
                 )
                 if save_video:
                     imageio.mimsave(f"{output_dir}/visualization.mp4", images, fps=120)

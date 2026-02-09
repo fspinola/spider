@@ -253,6 +253,15 @@ wheels = [
 ]
 
 [[package]]
+name = "chumpy"
+version = "0.71"
+source = { git = "https://github.com/mattloper/chumpy.git?rev=580566eafc9ac68b2614b64d6f7aaa84eebb70da#580566eafc9ac68b2614b64d6f7aaa84eebb70da" }
+dependencies = [
+    { name = "scipy" },
+    { name = "six" },
+]
+
+[[package]]
 name = "click"
 version = "8.3.1"
 source = { registry = "https://pypi.org/simple" }
@@ -516,6 +525,11 @@ sdist = { url = "https://files.pythonhosted.org/packages/b2/9d/c3b43da9515bd270d
 wheels = [
     { url = "https://files.pythonhosted.org/packages/55/e2/2537ebcff11c1ee1ff17d8d0b6f4db75873e3b0fb32c2d4a2ee31ecb310a/docstring_parser-0.17.0-py3-none-any.whl", hash = "sha256:cf2569abd23dce8099b300f9b4fa8191e9582dda731fd533daf54c4551658708", size = 36896, upload-time = "2025-07-21T07:35:00.684Z" },
 ]
+
+[[package]]
+name = "easymocap"
+version = "0.2.1"
+source = { git = "ssh://git@github.com/zju3dv/EasyMocap.git#d2a0a2da315e75ab93b370bbef8dd36372a12af6" }
 
 [[package]]
 name = "embreex"
@@ -2853,6 +2867,8 @@ name = "spider"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "chumpy" },
+    { name = "easymocap" },
     { name = "google-auth" },
     { name = "gspread" },
     { name = "huggingface-hub" },
@@ -2882,6 +2898,8 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "chumpy", git = "https://github.com/mattloper/chumpy.git?rev=580566eafc9ac68b2614b64d6f7aaa84eebb70da" },
+    { name = "easymocap", git = "ssh://git@github.com/zju3dv/EasyMocap.git" },
     { name = "google-auth" },
     { name = "gspread" },
     { name = "huggingface-hub" },

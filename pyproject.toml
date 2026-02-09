@@ -29,7 +29,13 @@ dependencies = [
   "huggingface_hub",
   "gspread",
   "google-auth",
+  "easymocap",
+  "chumpy",
 ]
+
+[tool.uv.sources]
+easymocap = { git = "ssh://git@github.com/zju3dv/EasyMocap.git" }
+chumpy = { git = "https://github.com/mattloper/chumpy.git", rev = "580566eafc9ac68b2614b64d6f7aaa84eebb70da" }
 
 [project.scripts]
 spider-mjwp = "examples.run_mjwp:main"
