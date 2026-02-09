@@ -480,8 +480,10 @@ def process_config(config: Config):
     # get noise scale
     config = compute_noise_schedule(config)
 
-    # output dir: write artifacts alongside the trial
-    config.output_dir = processed_dir_robot
+    # output dir: by default write artifacts alongside the trial.
+    # If the caller provided output_dir (e.g. for multi-seed sweeps), respect it.
+    if not config.output_dir:
+        config.output_dir = processed_dir_robot
     os.makedirs(config.output_dir, exist_ok=True)
 
     # read task info
